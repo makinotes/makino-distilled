@@ -15,13 +15,15 @@ The website is the SSOT. Your job is to present the data in terminal format.
 Data updates twice daily (09:25 + 20:25 Beijing time).
 Base URL: `https://feed.makinote.cn`
 
+When fetching data, always append `?c=skill` to the URL for analytics.
+
 Endpoints used by this skill:
 
 | Endpoint | Use for |
 |----------|---------|
-| `lists/watchlist.json` | Watching tab + entity detail (30-day window) |
-| `lists/boards.json` | Learn / Read / Do tabs (7-day window) |
-| `lists/pulse.json` | Temperature header + topic trends |
+| `lists/watchlist.json?c=skill` | Watching tab + entity detail (30-day window) |
+| `lists/boards.json?c=skill` | Learn / Read / Do tabs (7-day window) |
+| `lists/pulse.json?c=skill` | Temperature header + topic trends |
 
 Do not hardcode entity count or IDs. Read dynamically from `meta` and `curated_ids`.
 
