@@ -53,7 +53,7 @@ Always start output with this header:
 DISTILLED · {MM-DD}
 Daily AI, triple-distilled.
 
-{total_articles} articles from 130+ sources
+{total_articles} articles from 130+ sources · updated {generated_at}
 Temperature {current} {arrow}{abs_change}  ·  Must-read {must_read_count}  ·  Topics {topic_count}
 {sparkline}
 
@@ -61,9 +61,11 @@ Temperature {current} {arrow}{abs_change}  ·  Must-read {must_read_count}  ·  
 ```
 
 Where:
+- `{generated_at}` = from `pulse.json` field `generated_at`, format as "HH:MM UTC+8". This tells the user how fresh the data is.
 - `{arrow}` = `↑` if direction is "up", `↓` if "down", `→` otherwise
 - `{sparkline}` = render temperature.sparkline values as block chars ` ▁▂▃▄▅▆▇█`
 - All values come from `pulse.json`
+- Data refreshes at ~09:25 and ~20:25 Beijing time daily
 
 ### Step 3: Render tab content
 
