@@ -1,5 +1,7 @@
 # Distilled — Daily AI, triple-distilled.
 
+Proactively manage AI information. Keep up with developments. Reduce information anxiety.
+
 130+ AI sources scanned daily. Scored, structured, and served as JSON.
 Read it in your terminal — same data as [distilled.makinote.cn](https://distilled.makinote.cn).
 
