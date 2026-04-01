@@ -85,6 +85,50 @@ curl -s https://feed.makinote.cn/lists/watchlist.json | \
 curl -s https://feed.makinote.cn/lists/watchlist.json | jq '.curated_ids'
 ```
 
+## FAQ
+
+**Q: `/makino-distilled` no response or error?**
+Make sure you cloned into the correct directory (`~/.claude-internal/skills/makino-distilled`). The folder name must be exactly `makino-distilled`. If you see curl errors, check if your network can reach `feed.makinote.cn`.
+
+**Q: What are the 130+ sources?**
+Chinese and English AI media, tech blogs, research labs, newsletters, and developer communities. The full source list is curated and maintained on the backend. You can browse entity coverage at [distilled.makinote.cn](https://distilled.makinote.cn).
+
+**Q: Who picks the tracked entities? Can I add my own?**
+The 24 entities (Claude, Agent, OpenAI, etc.) are curated by the pipeline maintainer. Custom entity tracking is not supported yet — this is a read-only client.
+
+**Q: What does the score (e.g. [83]) mean?**
+A relevance score from 0-100 assigned by the pipeline. Higher = more relevant to the entity topic. It is NOT a quality rating of the article itself.
+
+**Q: What is the "30-day window"?**
+The pipeline tracks articles from the past 30 days. Older articles roll off automatically. This keeps the digest focused on recent developments.
+
+**Q: I see `[NOTE] Data is from yesterday` — is something broken?**
+No. The pipeline updates at 09:25 and 20:25 Beijing time. If you run before the morning update, you get last night's data. This is normal.
+
+**Q: Morning run vs evening run — what's different?**
+Morning data includes overnight articles. Evening data adds the day's articles. Entity narratives are regenerated each run, so summaries may shift.
+
+**Q: Output is very long. Can I see just one entity?**
+Yes. Use `/makino-distilled claude` or `/makino-distilled agent` to deep dive into a single entity with full article lists.
+
+**Q: The .md files keep piling up. Should I clean them?**
+The skill saves one file per day (`distilled-YYYY-MM-DD.md`) in your working directory. Delete old ones whenever you want — they are just local snapshots.
+
+**Q: How do I update the skill?**
+Run `cd ~/.claude-internal/skills/makino-distilled && git pull`. The skill also auto-checks for updates on each run and shows a notice if a new version is available.
+
+**Q: Will `git pull` overwrite my changes?**
+If you edited SKILL.md locally, git pull may conflict. Recommendation: don't modify SKILL.md — open an issue on GitHub instead.
+
+**Q: Is this the same as the website?**
+Same data source, same JSON. The website has visual design and interactive features. The skill is a terminal-native reader optimized for Claude Code / OpenClaw workflows.
+
+**Q: Will this project be maintained?**
+Yes. The pipeline runs automatically. The skill tracks the upstream API schema. Breaking changes follow a deprecation policy (see `api-schema.md` in the pipeline repo).
+
+**Q: Are article links guaranteed to work?**
+Links are scraped from original sources. Some may expire or get paywalled over time. The pipeline does not archive article content.
+
 ## License
 
 MIT
