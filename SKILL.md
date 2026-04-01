@@ -190,3 +190,33 @@ Show ALL articles in each section (no top-3 limit), sorted by score descending.
 - Do NOT modify, filter, or re-rank articles. Show them as-is from the JSON.
 - Output is plain text for terminal readability. No markdown headers, no bold, no emoji.
 - Keep output clean and scannable. Align columns where practical.
+
+## Consumed Fields (API Contract)
+
+This skill depends on the following fields from `watchlist.json`.
+If any required field is missing, show `[WARN] Missing field: {path}` and continue gracefully.
+
+```
+watchlist.json
+├── generated_at              (string, ISO 8601)
+├── curated_ids               (string[])
+├── meta
+│   ├── article_total         (int)
+│   └── entity_curated        (int)
+└── entities[]
+    ├── entity_id             (string)
+    ├── display               (string)
+    ├── type                  (string)
+    ├── last_updated          (string)
+    └── narrative
+        ├── summary           (string)
+        └── sections[]
+            ├── topic         (string)
+            └── articles[]
+                ├── title     (string)
+                ├── score     (int)
+                ├── date      (string, YYYY-MM-DD)
+                └── link      (string, URL)
+```
+
+Upstream schema doc: `feed-pipeline/docs/api-schema.md` (VPS)
