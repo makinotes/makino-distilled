@@ -2,7 +2,7 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "3.0"
+version: "3.1"
 last_updated: "2026-04-01"
 ---
 
@@ -21,35 +21,32 @@ Endpoints:
 
 | Endpoint | Use for |
 |----------|---------|
-| `lists/pulse.json?c=skill` | Temperature header |
-| `lists/watchlist.json?c=skill` | Watching section (30-day window) |
-| `lists/boards.json?c=skill` | Learn / Read / Do sections (7-day window) |
+| `lists/watchlist.json?c=skill` | Watching section (30-day window) + header stats |
 
+SSOT for entity list: `watchlist.json` -> `curated_ids` (sourced from VPS `config/watchlist.json` -> `llm_enabled`).
 Do not hardcode entity count or IDs. Read dynamically from `meta` and `curated_ids`.
 
 ## Commands
 
 | Command | What it shows |
 |---------|--------------|
-| `/makino-distilled` | Full digest — Watching + Read + Learn + Do in one page |
+| `/makino-distilled` | Full digest — Watching all curated entities |
 | `/makino-distilled <entity>` | Single entity deep dive (e.g. `/makino-distilled claude`) |
 
 ## Execution
 
 ### Step 1: Fetch all data
 
-Fetch all three endpoints in parallel using `curl -s`:
-- `lists/pulse.json?c=skill`
+Fetch one endpoint using `curl -s`:
 - `lists/watchlist.json?c=skill`
-- `lists/boards.json?c=skill`
 
 Also fetch the remote SKILL.md to check for updates:
 - `curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6`
-- Extract the `version:` line from remote, compare with local version `3.0`
+- Extract the `version:` line from remote, compare with local version `3.1`
 - If remote version > local version, prepend this notice before the header:
 
 ```
-[UPDATE] Distilled v{remote} available (you have v3.0). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
+[UPDATE] Distilled v{remote} available (you have v3.1). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
 ```
 
 - If versions match or curl fails: show nothing, skip silently.
@@ -60,25 +57,17 @@ Also fetch the remote SKILL.md to check for updates:
 DISTILLED · {MM-DD}
 Daily AI, triple-distilled.
 
-{total_articles} articles from 130+ sources · updated {generated_at}
-Temperature {current} {arrow}{abs_change}  ·  Must-read {must_read_count}  ·  Topics {topic_count}
-{sparkline}
+{meta.article_total} articles from {meta.source_count}+ sources · updated {generated_at}
 
 {headline}
 ```
 
 Where:
-- `{generated_at}` = from `pulse.json` field `generated_at`, format as "HH:MM UTC+8"
-- `{arrow}` = `↑` if direction is "up", `↓` if "down", `→` otherwise
-- `{sparkline}` = render temperature.sparkline values as block chars ` ▁▂▃▄▅▆▇█`
+- `{generated_at}` = from `watchlist.json` field `generated_at`, format as "HH:MM UTC+8"
+- `{meta.*}` = from `watchlist.json` -> `meta` object
+- If `headline` is empty or unavailable, skip the headline line
 
-### Step 3: Render all sections
-
-Output four sections top-to-bottom, separated by section headers.
-
----
-
-#### Section 1: WATCHING
+### Step 3: Render WATCHING
 
 ```
 ━━━ WATCHING ━━━
@@ -86,14 +75,15 @@ Output four sections top-to-bottom, separated by section headers.
 
 Source: `watchlist.json`
 
-Show all curated entities that have content (narrative.sections with articles > 0).
-Pinned entities (from `default_pins`) come first, marked with `★`.
-Others marked with `◆`, sorted by article count descending.
+Show ALL curated entities from `curated_ids` that have content (narrative.sections with articles > 0).
+Sort by article count descending. Mark all with `◆`.
 
 Per entity, show summary + top 3 articles:
 
+`article_count` = sum of articles across all `narrative.sections` (NOT the `total_articles` field).
+
 ```
-{pin_mark} {display}                           {type}   {article_count} articles
+◆ {display}                           {type}   {article_count} articles
   {narrative.summary, truncated to ~150 chars}
   topics: {section topics joined by " · "}
   [{score}] {title, max 58 chars}               {date MM-DD}
@@ -103,68 +93,6 @@ Per entity, show summary + top 3 articles:
   [{score}] {title}                              {date}
            {link}
 ```
-
----
-
-#### Section 2: READ
-
-```
-━━━ READ — articles worth reading ━━━
-```
-
-Source: `boards.json` -> `boards.read`
-
-Show top 10 by article score:
-
-```
-◆ {title}
-  {core_insight, truncated to 100 chars}...
-  [{score}] {article.link}
-```
-
-Do NOT output `why_read` or `background` fields.
-
----
-
-#### Section 3: LEARN
-
-```
-━━━ LEARN — topics worth studying ━━━
-```
-
-Source: `boards.json` -> `boards.learn`
-
-Per topic, show 1 learning point + 1 starter article:
-
-```
-◆ {title} {NEW if is_new_today}
-  Why: {why, max 120 chars}
-  1. {what_to_learn[0]}
-  Start: [{level}] {where_to_start[0].title} — {source}
-         {link}
-```
-
-Show only `what_to_learn[0]` and `where_to_start[0]`. Do NOT show items 2-3.
-
----
-
-#### Section 4: DO
-
-```
-━━━ DO — try it now ━━━
-```
-
-Source: `boards.json` -> `boards.do`
-
-Per action, show first step + link:
-
-```
-◆ {title, max 65 chars}
-  1. {how_to_start[0]}
-  {article.link}
-```
-
-Show only `how_to_start[0]`. Do NOT show steps 2-3 or `expected_outcome`.
 
 ---
 

@@ -7,7 +7,7 @@ No API keys. No dependencies. Just `curl`.
 
 ## What You Get
 
-One command, four sections — Watching, Read, Learn, Do:
+One command, all tracked entities at a glance:
 
 ```
 /makino-distilled
@@ -54,8 +54,6 @@ Updated twice daily (09:25 + 20:25 Beijing time).
 | Endpoint | Content |
 |----------|---------|
 | `lists/watchlist.json` | Entity narratives + articles (30-day window) |
-| `lists/boards.json` | Learn / Read / Do boards (7-day window) |
-| `lists/pulse.json` | Temperature, trends, headlines |
 
 ## How It Works
 
@@ -76,8 +74,8 @@ The JSON endpoints are public. Build your own client:
 curl -s https://feed.makinote.cn/lists/watchlist.json | \
   jq '.entities[] | select(.entity_id == "claude") | .narrative.summary'
 
-# Trending keywords
-curl -s https://feed.makinote.cn/indexes/trending.json | jq '.trending[:10]'
+# All curated entity IDs
+curl -s https://feed.makinote.cn/lists/watchlist.json | jq '.curated_ids'
 ```
 
 ## License
