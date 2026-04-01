@@ -57,7 +57,7 @@ Also fetch the remote SKILL.md to check for updates:
 DISTILLED · {MM-DD}
 Daily AI, triple-distilled.
 
-{meta.article_total} articles from {meta.source_count}+ sources · updated {generated_at}
+{meta.article_total} articles · {meta.entity_curated} entities · updated {generated_at}
 
 {headline}
 ```
