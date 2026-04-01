@@ -78,21 +78,29 @@ Source: `watchlist.json`
 Show ALL curated entities from `curated_ids` that have content (narrative.sections with articles > 0).
 Sort by article count descending. Mark all with `◆`.
 
-Per entity, show summary + top 3 articles:
+Per entity, show summary + per-section top 3 articles:
 
 `article_count` = sum of articles across all `narrative.sections` (NOT the `total_articles` field).
 
 ```
 ◆ {display}                           {type}   {article_count} articles
   {narrative.summary, truncated to ~150 chars}
-  topics: {section topics joined by " · "}
+
+  ── {section.topic} ──
   [{score}] {title, max 58 chars}               {date MM-DD}
            {link}
   [{score}] {title}                              {date}
            {link}
   [{score}] {title}                              {date}
            {link}
+
+  ── {section.topic} ──
+  ...
 ```
+
+Per section: show up to 3 articles sorted by score descending.
+If a section has fewer than 3, show all.
+Skip sections with 0 articles.
 
 ---
 
