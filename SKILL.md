@@ -2,7 +2,7 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "3.1"
+version: "3.2"
 last_updated: "2026-04-01"
 ---
 
@@ -12,8 +12,14 @@ You are a terminal-based reader for the Distilled AI daily feed.
 You do NOT generate, score, or process any content — you fetch and render.
 The website is the SSOT. Your job is to present the data in terminal format.
 
-Data updates twice daily (09:25 + 20:25 Beijing time).
+Data updates twice daily (09:25 + 20:25 Beijing time) via VPS crontab.
+All times in this skill are Beijing time (UTC+8).
 Base URL: `https://feed.makinote.cn`
+
+**Data freshness**: Pipeline runs at 09:25 and 20:25 Beijing time.
+If you run before 09:25, you get yesterday's evening data.
+If you run between 09:25-20:25, you get today's morning data.
+If you run after 20:25, you get today's evening data.
 
 When fetching data, always append `?c=skill` to the URL for analytics.
 
@@ -42,11 +48,11 @@ Fetch one endpoint using `curl -s`:
 
 Also fetch the remote SKILL.md to check for updates:
 - `curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6`
-- Extract the `version:` line from remote, compare with local version `3.1`
+- Extract the `version:` line from remote, compare with local version `3.2`
 - If remote version > local version, prepend this notice before the header:
 
 ```
-[UPDATE] Distilled v{remote} available (you have v3.1). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
+[UPDATE] Distilled v{remote} available (you have v3.2). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
 ```
 
 - If versions match or curl fails: show nothing, skip silently.
@@ -57,15 +63,18 @@ Also fetch the remote SKILL.md to check for updates:
 DISTILLED · {MM-DD}
 Daily AI, triple-distilled.
 
-{meta.article_total} articles · {meta.entity_curated} entities · updated {generated_at}
-
-{headline}
+{meta.article_total} articles · {meta.entity_curated} entities · data from {generated_at_beijing}
+{freshness_note}
 ```
 
 Where:
-- `{generated_at}` = from `watchlist.json` field `generated_at`, format as "HH:MM UTC+8"
+- `{generated_at_beijing}` = from `watchlist.json` field `generated_at`, convert to Beijing time, format as "MM-DD HH:MM"
 - `{meta.*}` = from `watchlist.json` -> `meta` object
-- If `headline` is empty or unavailable, skip the headline line
+- `{freshness_note}` = compare `generated_at` date with today's date (Beijing time):
+  - Same day: nothing (skip line)
+  - 1 day old: `[NOTE] Data is from yesterday. Next update: today 09:25 Beijing time.`
+  - 2+ days old: `[WARN] Data is {N} days old. Check pipeline health.`
+- If `headline` is available and non-empty, append after freshness note: `{headline}`
 
 ### Step 3: Render WATCHING
 
@@ -146,23 +155,25 @@ Saved to ./distilled-{YYYY-MM-DD}.md
 Fetch: `lists/watchlist.json`
 
 Find entity by entity_id (case-insensitive match on entity_id or display).
-Show full narrative.summary (no truncation) + all sections with all articles.
+Show full narrative.summary (no truncation) + all sections with ALL articles.
 
 ```
-{display} · {type}
-{total_articles} articles · last updated {last_updated}
+◆ {display}  [{type}]  {article_count} articles · last updated {last_updated}
 
-{narrative.summary — full text}
+{narrative.summary — full text, no truncation}
 
-━━━ {section.topic} ━━━
-{section.summary}
+  ── {section.topic} ({section_article_count}) ──
+  [{score}] {title}
+       {link}  ({date MM-DD})
+  [{score}] {title}
+       {link}  ({date})
+  ...
 
-  [{score}] {title}                              {date}
-           {link}
+  ── {section.topic} ({section_article_count}) ──
   ...
 ```
 
-Show all articles in each section, with links.
+Show ALL articles in each section (no top-3 limit), sorted by score descending.
 
 ## Error Handling
 
