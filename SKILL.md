@@ -78,25 +78,35 @@ Source: `watchlist.json`
 Show ALL curated entities from `curated_ids` that have content (narrative.sections with articles > 0).
 Sort by article count descending. Mark all with `◆`.
 
-Per entity, show summary + per-section top 3 articles:
-
 `article_count` = sum of articles across all `narrative.sections` (NOT the `total_articles` field).
 
+Per entity, show summary + per-section top 3 articles:
+
 ```
-◆ {display}                           {type}   {article_count} articles
-  {narrative.summary, truncated to ~150 chars}
+◆ {display}  [{type}]  {article_count} articles
+  {narrative.summary — smart truncated at sentence boundary, ~180 chars max}
 
-  ── {section.topic} ──
-  [{score}] {title, max 58 chars}               {date MM-DD}
-           {link}
-  [{score}] {title}                              {date}
-           {link}
-  [{score}] {title}                              {date}
-           {link}
+  ── {section.topic} ({section_article_count}) ──
+  [{score}] {title}
+       {link}  ({date MM-DD})
+  [{score}] {title}
+       {link}  ({date})
+  [{score}] {title}
+       {link}  ({date})
 
-  ── {section.topic} ──
+  ── {section.topic} ({section_article_count}) ──
   ...
+
+────────────────────────────────────────────────────────────────────
 ```
+
+Formatting rules:
+- Summary: truncate at sentence boundary (。. ；——) near 180 chars. Do NOT cut mid-sentence.
+- Title: truncate at word boundary for English (~60 chars). Do NOT cut mid-word.
+- Score + title on one line, link + date on next line (compact two-line per article).
+- Section header shows total article count in parens, e.g. `(6)`.
+- Each section separated by blank line.
+- Entity separator: `────` line (68 chars) after each entity.
 
 Per section: show up to 3 articles sorted by score descending.
 If a section has fewer than 3, show all.
