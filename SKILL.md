@@ -2,7 +2,7 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. Four views: watching, learn, read, do. No API keys, no dependencies — just curl."
-version: "2.2"
+version: "2.3"
 last_updated: "2026-04-01"
 ---
 
@@ -56,9 +56,12 @@ Daily AI, triple-distilled.
 {total_articles} articles from 130+ sources · updated {generated_at}
 Temperature {current} {arrow}{abs_change}  ·  Must-read {must_read_count}  ·  Topics {topic_count}
 {sparkline}
+Views: /makino-distilled [learn | read | do | <entity>]
 
 {headline}
 ```
+
+The "Views:" line is always shown in the header regardless of which tab is active.
 
 Where:
 - `{generated_at}` = from `pulse.json` field `generated_at`, format as "HH:MM UTC+8". This tells the user how fresh the data is.
@@ -183,16 +186,6 @@ Show all articles in each section, with links.
 ---
 
 ### Step 4: Render footer (all commands)
-
-When no arguments are passed (default Watching view), append a hint line after the footer:
-
-```
---------------------------------------------------------------------
-distilled.makinote.cn · 130+ sources · by makino
-/makino-distilled [learn | read | do | <entity>]
-```
-
-When arguments are passed (learn, read, do, or entity), show footer without hint:
 
 ```
 --------------------------------------------------------------------
