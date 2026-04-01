@@ -64,6 +64,7 @@ Also fetch the remote SKILL.md to check for updates:
 ```
 DISTILLED · {MM-DD}
 Daily AI, triple-distilled.
+Proactively manage AI info · Keep up with developments · Reduce anxiety
 
 {meta.article_total} articles · {meta.entity_curated} entities · data from {generated_at_beijing}
 {freshness_note}
@@ -129,7 +130,7 @@ Skip sections with 0 articles.
 
 ```
 --------------------------------------------------------------------
-distilled.makinote.cn · 130+ sources · by makino
+distilled.makinote.cn · manage AI info proactively · by makino
 ```
 
 ### Step 5: Auto-save to local file
