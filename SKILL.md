@@ -2,7 +2,7 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "3.2"
+version: "3.3"
 last_updated: "2026-04-01"
 ---
 
@@ -50,11 +50,11 @@ Fetch one endpoint using `curl -s`:
 
 Also fetch the remote SKILL.md to check for updates:
 - `curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6`
-- Extract the `version:` line from remote, compare with local version `3.2`
+- Extract the `version:` line from remote, compare with local version `3.3`
 - If remote version > local version, prepend this notice before the header:
 
 ```
-[UPDATE] Distilled v{remote} available (you have v3.2). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
+[UPDATE] Distilled v{remote} available (you have v3.3). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
 ```
 
 - If versions match or curl fails: show nothing, skip silently.
@@ -77,7 +77,6 @@ Where:
   - Same day: nothing (skip line)
   - 1 day old: `[NOTE] Data is from yesterday. Next update: today 09:25 Beijing time.`
   - 2+ days old: `[WARN] Data is {N} days old. Check pipeline health.`
-- If `headline` is available and non-empty, append after freshness note: `{headline}`
 
 ### Step 3: Render WATCHING
 
