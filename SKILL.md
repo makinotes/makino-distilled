@@ -2,8 +2,8 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. Four views: watching, learn, read, do. No API keys, no dependencies — just curl."
-version: "2.0"
-last_updated: "2026-03-31"
+version: "2.2"
+last_updated: "2026-04-01"
 ---
 
 # Distilled — Daily AI, triple-distilled.
@@ -184,9 +184,45 @@ Show all articles in each section, with links.
 
 ### Step 4: Render footer (all commands)
 
+When no arguments are passed (default Watching view), append a hint line after the footer:
+
 ```
 --------------------------------------------------------------------
 distilled.makinote.cn · 130+ sources · by makino
+/makino-distilled [learn | read | do | <entity>]
+```
+
+When arguments are passed (learn, read, do, or entity), show footer without hint:
+
+```
+--------------------------------------------------------------------
+distilled.makinote.cn · 130+ sources · by makino
+```
+
+### Step 5: Auto-save to local file
+
+After rendering output to terminal, always save the same content to a local markdown file.
+
+**File naming**: `distilled-{YYYY-MM-DD}-{tab}.md`
+
+| Command | Filename |
+|---------|----------|
+| `/makino-distilled` | `distilled-2026-04-01-watching.md` |
+| `/makino-distilled learn` | `distilled-2026-04-01-learn.md` |
+| `/makino-distilled read` | `distilled-2026-04-01-read.md` |
+| `/makino-distilled do` | `distilled-2026-04-01-do.md` |
+| `/makino-distilled claude` | `distilled-2026-04-01-claude.md` |
+
+**Date source**: use `date "+%Y-%m-%d"` to get today's date, do NOT hardcode.
+
+**Save location**: current working directory (`./`). This ensures the skill works for any user without assuming a specific folder structure.
+
+**File format**: plain text wrapped in a markdown file (no frontmatter, no markdown headers). The content is identical to terminal output.
+
+**After saving**, print:
+
+```
+Saved to ./distilled-{YYYY-MM-DD}-{tab}.md
 ```
 
 ## Error Handling
