@@ -49,7 +49,12 @@ The skill also checks for updates automatically on each run. If a new version is
 ## Data
 
 All data is fetched from public JSON endpoints at `feed.makinote.cn`.
-Updated twice daily (09:25 + 20:25 Beijing time).
+
+Pipeline runs twice daily on VPS via crontab (Beijing time):
+- **09:25** — morning update
+- **20:25** — evening update
+
+If you run before 09:25, you get yesterday's evening data. The skill shows a freshness note when data is stale.
 
 | Endpoint | Content |
 |----------|---------|
