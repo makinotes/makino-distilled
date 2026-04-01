@@ -1,8 +1,8 @@
 ---
 name: makino-distilled
 invocation: user
-description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. Four views: watching, learn, read, do. No API keys, no dependencies — just curl."
-version: "2.3"
+description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
+version: "3.0"
 last_updated: "2026-04-01"
 ---
 
@@ -17,13 +17,13 @@ Base URL: `https://feed.makinote.cn`
 
 When fetching data, always append `?c=skill` to the URL for analytics.
 
-Endpoints used by this skill:
+Endpoints:
 
 | Endpoint | Use for |
 |----------|---------|
-| `lists/watchlist.json?c=skill` | Watching tab + entity detail (30-day window) |
-| `lists/boards.json?c=skill` | Learn / Read / Do tabs (7-day window) |
-| `lists/pulse.json?c=skill` | Temperature header + topic trends |
+| `lists/pulse.json?c=skill` | Temperature header |
+| `lists/watchlist.json?c=skill` | Watching section (30-day window) |
+| `lists/boards.json?c=skill` | Learn / Read / Do sections (7-day window) |
 
 Do not hardcode entity count or IDs. Read dynamically from `meta` and `curated_ids`.
 
@@ -31,23 +31,19 @@ Do not hardcode entity count or IDs. Read dynamically from `meta` and `curated_i
 
 | Command | What it shows |
 |---------|--------------|
-| `/makino-distilled` | Watching tab — pinned entities + all entities with content |
-| `/makino-distilled learn` | Learn tab — topics worth studying |
-| `/makino-distilled read` | Read tab — articles worth reading |
-| `/makino-distilled do` | Do tab — actionable items |
+| `/makino-distilled` | Full digest — Watching + Read + Learn + Do in one page |
 | `/makino-distilled <entity>` | Single entity deep dive (e.g. `/makino-distilled claude`) |
 
 ## Execution
 
-### Step 1: Fetch data
+### Step 1: Fetch all data
 
-Use `curl -s` to fetch the required JSON endpoint(s).
-Always fetch `lists/pulse.json` for the header stats.
-Then fetch the tab-specific endpoint.
+Fetch all three endpoints in parallel using `curl -s`:
+- `lists/pulse.json?c=skill`
+- `lists/watchlist.json?c=skill`
+- `lists/boards.json?c=skill`
 
-### Step 2: Render header (all commands)
-
-Always start output with this header:
+### Step 2: Render header
 
 ```
 DISTILLED · {MM-DD}
@@ -56,33 +52,34 @@ Daily AI, triple-distilled.
 {total_articles} articles from 130+ sources · updated {generated_at}
 Temperature {current} {arrow}{abs_change}  ·  Must-read {must_read_count}  ·  Topics {topic_count}
 {sparkline}
-Views: /makino-distilled [learn | read | do | <entity>]
 
 {headline}
 ```
 
-The "Views:" line is always shown in the header regardless of which tab is active.
-
 Where:
-- `{generated_at}` = from `pulse.json` field `generated_at`, format as "HH:MM UTC+8". This tells the user how fresh the data is.
+- `{generated_at}` = from `pulse.json` field `generated_at`, format as "HH:MM UTC+8"
 - `{arrow}` = `↑` if direction is "up", `↓` if "down", `→` otherwise
 - `{sparkline}` = render temperature.sparkline values as block chars ` ▁▂▃▄▅▆▇█`
-- All values come from `pulse.json`
-- Data refreshes at ~09:25 and ~20:25 Beijing time daily
 
-### Step 3: Render tab content
+### Step 3: Render all sections
+
+Output four sections top-to-bottom, separated by section headers.
 
 ---
 
-#### `/makino-distilled` — Watching
+#### Section 1: WATCHING
 
-Fetch: `lists/watchlist.json` + `lists/pulse.json`
+```
+━━━ WATCHING ━━━
+```
 
-Show all entities that have content (narrative.sections with articles > 0).
+Source: `watchlist.json`
+
+Show all curated entities that have content (narrative.sections with articles > 0).
 Pinned entities (from `default_pins`) come first, marked with `★`.
 Others marked with `◆`, sorted by article count descending.
 
-Per entity:
+Per entity, show summary + top 3 articles:
 
 ```
 {pin_mark} {display}                           {type}   {article_count} articles
@@ -96,37 +93,17 @@ Per entity:
            {link}
 ```
 
-Show top 3 articles per entity, sorted by score descending.
-
 ---
 
-#### `/makino-distilled learn` — Learn
-
-Fetch: `lists/boards.json` -> `boards.learn`
-
-Per topic, show 1 learning point + 1 starter article:
+#### Section 2: READ
 
 ```
-◆ {title} {NEW if is_new_today}
-  Why: {why, max 120 chars}
-
-  1. {what_to_learn[0]}
-
-  Start here:
-    [{level}] {title}  — {source}
-              {link}
+━━━ READ — articles worth reading ━━━
 ```
 
-Show only `what_to_learn[0]` (first item) and `where_to_start[0]` (first article).
-Do NOT show items 2-3 or additional starter articles.
+Source: `boards.json` -> `boards.read`
 
----
-
-#### `/makino-distilled read` — Read
-
-Fetch: `lists/boards.json` -> `boards.read`
-
-Per article:
+Show top 10 by article score:
 
 ```
 ◆ {title}
@@ -135,15 +112,38 @@ Per article:
 ```
 
 Do NOT output `why_read` or `background` fields.
-Truncate `core_insight` to 100 characters.
-
-Show top 15 by article score.
 
 ---
 
-#### `/makino-distilled do` — Do
+#### Section 3: LEARN
 
-Fetch: `lists/boards.json` -> `boards.do`
+```
+━━━ LEARN — topics worth studying ━━━
+```
+
+Source: `boards.json` -> `boards.learn`
+
+Per topic, show 1 learning point + 1 starter article:
+
+```
+◆ {title} {NEW if is_new_today}
+  Why: {why, max 120 chars}
+  1. {what_to_learn[0]}
+  Start: [{level}] {where_to_start[0].title} — {source}
+         {link}
+```
+
+Show only `what_to_learn[0]` and `where_to_start[0]`. Do NOT show items 2-3.
+
+---
+
+#### Section 4: DO
+
+```
+━━━ DO — try it now ━━━
+```
+
+Source: `boards.json` -> `boards.do`
 
 Per action, show first step + link:
 
@@ -153,12 +153,38 @@ Per action, show first step + link:
   {article.link}
 ```
 
-Show only `how_to_start[0]` (first step).
-Do NOT show steps 2-3 or `expected_outcome`.
+Show only `how_to_start[0]`. Do NOT show steps 2-3 or `expected_outcome`.
 
 ---
 
-#### `/makino-distilled <entity>` — Entity detail
+### Step 4: Render footer
+
+```
+--------------------------------------------------------------------
+distilled.makinote.cn · 130+ sources · by makino
+```
+
+### Step 5: Auto-save to local file
+
+After rendering, save the same content to a local markdown file.
+
+**File naming**: `distilled-{YYYY-MM-DD}.md`
+
+For entity detail: `distilled-{YYYY-MM-DD}-{entity_id}.md`
+
+**Date source**: use `date "+%Y-%m-%d"`, do NOT hardcode.
+
+**Save location**: current working directory (`./`).
+
+**File format**: plain text in a .md file (no frontmatter, no markdown headers). Content identical to terminal output.
+
+**After saving**, print:
+
+```
+Saved to ./distilled-{YYYY-MM-DD}.md
+```
+
+## Entity Detail (`/makino-distilled <entity>`)
 
 Fetch: `lists/watchlist.json`
 
@@ -176,53 +202,16 @@ Show full narrative.summary (no truncation) + all sections with all articles.
 
   [{score}] {title}                              {date}
            {link}
-  [{score}] {title}                              {date}
-           {link}
   ...
 ```
 
 Show all articles in each section, with links.
 
----
-
-### Step 4: Render footer (all commands)
-
-```
---------------------------------------------------------------------
-distilled.makinote.cn · 130+ sources · by makino
-```
-
-### Step 5: Auto-save to local file
-
-After rendering output to terminal, always save the same content to a local markdown file.
-
-**File naming**: `distilled-{YYYY-MM-DD}-{tab}.md`
-
-| Command | Filename |
-|---------|----------|
-| `/makino-distilled` | `distilled-2026-04-01-watching.md` |
-| `/makino-distilled learn` | `distilled-2026-04-01-learn.md` |
-| `/makino-distilled read` | `distilled-2026-04-01-read.md` |
-| `/makino-distilled do` | `distilled-2026-04-01-do.md` |
-| `/makino-distilled claude` | `distilled-2026-04-01-claude.md` |
-
-**Date source**: use `date "+%Y-%m-%d"` to get today's date, do NOT hardcode.
-
-**Save location**: current working directory (`./`). This ensures the skill works for any user without assuming a specific folder structure.
-
-**File format**: plain text wrapped in a markdown file (no frontmatter, no markdown headers). The content is identical to terminal output.
-
-**After saving**, print:
-
-```
-Saved to ./distilled-{YYYY-MM-DD}-{tab}.md
-```
-
 ## Error Handling
 
 - If curl fails or returns empty: "Data unavailable. Try again later or visit distilled.makinote.cn"
 - If entity not found: "Entity '{name}' not found. Available: {list of entity displays}"
-- If boards.json has empty board: "{tab} has no articles today."
+- If a section has no data: skip that section silently, do NOT show empty headers.
 
 ## Notes
 
