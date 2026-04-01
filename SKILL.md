@@ -43,6 +43,17 @@ Fetch all three endpoints in parallel using `curl -s`:
 - `lists/watchlist.json?c=skill`
 - `lists/boards.json?c=skill`
 
+Also fetch the remote SKILL.md to check for updates:
+- `curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6`
+- Extract the `version:` line from remote, compare with local version `3.0`
+- If remote version > local version, prepend this notice before the header:
+
+```
+[UPDATE] Distilled v{remote} available (you have v3.0). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
+```
+
+- If versions match or curl fails: show nothing, skip silently.
+
 ### Step 2: Render header
 
 ```

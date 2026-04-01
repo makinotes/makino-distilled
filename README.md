@@ -7,14 +7,11 @@ No API keys. No dependencies. Just `curl`.
 
 ## What You Get
 
-Four views matching the website:
+One command, four sections — Watching, Read, Learn, Do:
 
-| Command | View | What it shows |
-|---------|------|--------------|
-| `/makino-distilled` | Watching | Entity narratives, topic pills, and top articles |
-| `/makino-distilled learn` | Learn | Topics worth studying — why and where to start |
-| `/makino-distilled read` | Read | Articles worth reading with core insights |
-| `/makino-distilled do` | Do | Actionable items with first steps |
+```
+/makino-distilled
+```
 
 Deep dive into a specific entity:
 
@@ -24,16 +21,15 @@ Deep dive into a specific entity:
 /makino-distilled agent
 ```
 
-## Quick Start
+Output auto-saves to `./distilled-{date}.md`.
+
+## Install
 
 ### Claude Code
 
 ```bash
-# Copy the skill into your project
-cp -r makino-distilled /path/to/your/project/.claude/skills/
-
-# Or into global skills
-cp -r makino-distilled ~/.claude/skills/
+cd ~/.claude-internal/skills/
+git clone https://github.com/makinotes/makino-distilled.git
 ```
 
 Then type `/makino-distilled` in Claude Code.
@@ -41,6 +37,14 @@ Then type `/makino-distilled` in Claude Code.
 ### OpenClaw
 
 Copy the `makino-distilled` folder into your agent's skills directory, then invoke `/makino-distilled`.
+
+## Update
+
+```bash
+cd ~/.claude-internal/skills/makino-distilled && git pull
+```
+
+The skill also checks for updates automatically on each run. If a new version is available, you'll see a notice in the output.
 
 ## Data
 
