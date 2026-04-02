@@ -2,11 +2,11 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "3.3"
-last_updated: "2026-04-01"
+version: "3.4"
+last_updated: "2026-04-02"
 ---
 
-# Distilled — Daily AI, triple-distilled.
+# Distilled — Don't scroll. Distill.
 
 You are a terminal-based reader for the Distilled AI daily feed.
 You do NOT generate, score, or process any content — you fetch and render.
@@ -50,11 +50,11 @@ Fetch one endpoint using `curl -s`:
 
 Also fetch the remote SKILL.md to check for updates:
 - `curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6`
-- Extract the `version:` line from remote, compare with local version `3.3`
+- Extract the `version:` line from remote, compare with local version `3.4`
 - If remote version > local version, prepend this notice before the header:
 
 ```
-[UPDATE] Distilled v{remote} available (you have v3.3). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
+[UPDATE] Distilled v{remote} available (you have v3.4). Run: cd ~/.claude-internal/skills/makino-distilled && git pull
 ```
 
 - If versions match or curl fails: show nothing, skip silently.
@@ -63,7 +63,7 @@ Also fetch the remote SKILL.md to check for updates:
 
 ```
 DISTILLED · {MM-DD}
-Daily AI, triple-distilled.
+Don't scroll. Distill.
 Proactively manage AI info · Keep up with developments · Reduce anxiety
 
 {meta.article_total} articles · {meta.entity_curated} entities · data from {generated_at_beijing}
@@ -188,30 +188,50 @@ Show ALL articles in each section (no top-3 limit), sorted by score descending.
 
 ## Consumed Fields (API Contract)
 
-This skill depends on the following fields from `watchlist.json`.
+This skill consumes JSON from a public API endpoint (`feed.makinote.cn`).
+The upstream pipeline produces data; this skill is a read-only consumer.
 If any required field is missing, show `[WARN] Missing field: {path}` and continue gracefully.
 
 ```
+GET https://feed.makinote.cn/lists/watchlist.json
+
 watchlist.json
-├── generated_at              (string, ISO 8601)
-├── curated_ids               (string[])
+├── version                   (string, e.g. "2.0")
+├── generated_at              (string, ISO 8601 with timezone)
+├── default_pins              (string[], default pinned entity IDs)
+├── curated_ids               (string[], all curated entity IDs)
 ├── meta
+│   ├── window_days           (int, e.g. 30)
 │   ├── article_total         (int)
-│   └── entity_curated        (int)
+│   ├── entity_total          (int)
+│   ├── entity_curated        (int)
+│   ├── entity_with_narrative (int)
+│   └── entity_types          (object, e.g. {"Product": 18, "Concept": 27, ...})
 └── entities[]
     ├── entity_id             (string)
     ├── display               (string)
-    ├── type                  (string)
-    ├── last_updated          (string)
+    ├── type                  (string, e.g. "Product", "Concept", "Company", "Person", "Tool")
+    ├── total_articles        (int, total articles for this entity)
+    ├── last_updated          (string, ISO 8601)
+    ├── trend                 (object, trend data)
+    ├── boards                (object, board/category data)
     └── narrative
         ├── summary           (string)
         └── sections[]
             ├── topic         (string)
+            ├── summary       (string, section-level summary)
+            ├── keywords      (string[], topic keywords)
             └── articles[]
                 ├── title     (string)
-                ├── score     (int)
+                ├── score     (int, 0-100 relevance score)
                 ├── date      (string, YYYY-MM-DD)
-                └── link      (string, URL)
+                ├── link      (string, URL)
+                └── summary   (string, article summary)
 ```
 
-Upstream schema doc: `feed-pipeline/docs/api-schema.md` (VPS)
+Fields used by this skill: `generated_at`, `curated_ids`, `meta.article_total`, `meta.entity_curated`,
+`entities[].{entity_id, display, type, last_updated, narrative.summary, narrative.sections[].topic, narrative.sections[].articles[].{title, score, date, link}}`.
+
+Other fields (`version`, `default_pins`, `boards`, `trend`, `section.summary`, `section.keywords`, `article.summary`) are available but not currently rendered. Future versions may use them.
+
+Upstream: VPS pipeline at `/opt/feed-pipeline/` → JSON published to `feed.makinote.cn` via Vercel CDN.
