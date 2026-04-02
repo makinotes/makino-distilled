@@ -67,16 +67,12 @@ Daily AI, triple-distilled.
 Proactively manage AI info · Keep up with developments · Reduce anxiety
 
 {meta.article_total} articles · {meta.entity_curated} entities · data from {generated_at_beijing}
-{freshness_note}
 ```
 
 Where:
 - `{generated_at_beijing}` = from `watchlist.json` field `generated_at`, convert to Beijing time, format as "MM-DD HH:MM"
 - `{meta.*}` = from `watchlist.json` -> `meta` object
-- `{freshness_note}` = compare `generated_at` date with today's date (Beijing time):
-  - Same day: nothing (skip line)
-  - 1 day old: `[NOTE] Data is from yesterday. Next update: today 09:25 Beijing time.`
-  - 2+ days old: `[WARN] Data is {N} days old. Check pipeline health.`
+- No freshness warning needed. The data timestamp speaks for itself.
 
 ### Step 3: Render WATCHING
 
