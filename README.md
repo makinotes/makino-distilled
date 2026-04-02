@@ -1,29 +1,7 @@
-# Distilled — Daily AI, triple-distilled.
+# makino-distilled — Don't scroll. Distill.
 
-Proactively manage AI information. Keep up with developments. Reduce information anxiety.
-
-130+ AI sources scanned daily. Scored, structured, and served as JSON.
-Read it in your terminal — same data as [distilled.makinote.cn](https://distilled.makinote.cn).
-
-No API keys. No dependencies. Just `curl`.
-
-## What You Get
-
-One command, all tracked entities at a glance:
-
-```
-/makino-distilled
-```
-
-Deep dive into a specific entity:
-
-```
-/makino-distilled claude
-/makino-distilled openai
-/makino-distilled agent
-```
-
-Output auto-saves to `./distilled-{date}.md`.
+主动管理 AI 信息，跟上发展，降低信息焦虑。
+130+ AI 信源每日扫描、评分、结构化。一条命令，在终端读完。
 
 ## Install
 
@@ -40,13 +18,35 @@ Then type `/makino-distilled` in Claude Code.
 
 Copy the `makino-distilled` folder into your agent's skills directory, then invoke `/makino-distilled`.
 
-## Update
+## Usage
 
-```bash
-cd ~/.claude-internal/skills/makino-distilled && git pull
+```
+/makino-distilled
 ```
 
-The skill also checks for updates automatically on each run. If a new version is available, you'll see a notice in the output.
+Full digest — all tracked entities at a glance (24 AI entities, per-section top 3 articles).
+
+```
+/makino-distilled claude
+/makino-distilled openai
+/makino-distilled agent
+```
+
+Single entity deep dive — full narrative + all articles.
+
+Output auto-saves to `./distilled-{date}.md`.
+
+## Features
+
+- Zero dependencies, zero API keys (just curl)
+- Auto-updates twice daily (09:25 / 20:25 Beijing time)
+- Auto-detect data freshness (stale data warning)
+- Auto-check for skill updates on each run
+- Same data as [distilled.makinote.cn](https://distilled.makinote.cn), terminal-native
+
+## What Problem Does This Solve
+
+Keeping up with AI developments means scrolling through dozens of sources daily. Most of it is noise. This skill distills 130+ sources into structured, scored summaries — you read the terminal output in 2 minutes instead of scrolling feeds for an hour. Know what matters, skip what doesn't.
 
 ## Data
 
@@ -84,6 +84,18 @@ curl -s https://feed.makinote.cn/lists/watchlist.json | \
 # All curated entity IDs
 curl -s https://feed.makinote.cn/lists/watchlist.json | jq '.curated_ids'
 ```
+
+## Website
+
+[distilled.makinote.cn](https://distilled.makinote.cn) — same data, visual interface.
+
+## Update
+
+```bash
+cd ~/.claude-internal/skills/makino-distilled && git pull
+```
+
+The skill also checks for updates automatically on each run. If a new version is available, you'll see a notice in the output.
 
 ## FAQ
 
