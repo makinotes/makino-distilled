@@ -31,25 +31,35 @@ Output auto-saves to `./distilled-{date}.md`.
 
 ## Example Output
 
+Full output from a real run (752 lines, 24 entities, 969 articles):
+
+> **[demo/distilled-2026-04-03.md](demo/distilled-2026-04-03.md)**
+
+Preview (first 30 lines):
+
 ```
 DISTILLED · 04-03
 Don't scroll. Distill.
 Proactively manage AI info · Keep up with developments · Reduce anxiety
 
-898 articles · 24 entities · data from 04-02 11:15
+969 articles · 24 entities · data from 04-03 16:57
 
 ━━━ WATCHING ━━━
 
-◆ Agent  [Concept]  31 articles
-  Claude Code 源码泄露让我们看到了其核心的 Agentic Harness 设计...
+◆ Claude  [Product]  33 articles
+  最近最值得关注的是 Claude Code 源码泄露和从中暴露的 Harness Engineering 工程实践...
 
-  ── Agentic Harness (6) ──
-  [75] 一个案例，搞明白 Harness
-       https://mp.weixin.qq.com/s/...  (03-25)
-  [65] 最近很火的 Harness-Engineering 到底是什么？
+  ── Claude Code 源码泄露 (6) ──
+  [77] 突发！Claude Code 源码泄露，扒出这些隐藏功能
+       https://mp.weixin.qq.com/s/...  (04-01)
+  [72] Claude Code 512,000 行源码泄露，有3点启发
        https://mp.weixin.qq.com/s/...  (03-31)
 
-  ...24 entities, ~700 lines total
+  ── Harness (6) ──
+  [70] 一夜之间，全世界的 Agent 能力提高了一个档次
+       https://mp.weixin.qq.com/s/...  (04-03)
+
+  ...24 entities, ~750 lines total
 ```
 
 ## Configuration (Coming in v4.1)
