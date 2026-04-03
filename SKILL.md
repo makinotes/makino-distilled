@@ -2,7 +2,7 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "4.0"
+version: "4.1"
 last_updated: "2026-04-03"
 ---
 
@@ -50,11 +50,11 @@ This file is pre-rendered by the VPS pipeline. It contains the complete terminal
 curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6
 ```
 
-Extract the `version:` line from remote, compare with local version `4.0`.
+Extract the `version:` line from remote, compare with local version `4.1`.
 If remote version > local version, prepend this notice before the output:
 
 ```
-[UPDATE] Distilled v{remote} available (you have v4.0). Run: cd ~/.claude/skills/makino-distilled && git pull
+[UPDATE] Distilled v{remote} available (you have v4.1). Run: cd ~/.claude/skills/makino-distilled && git pull
 ```
 
 If versions match or curl fails: show nothing, skip silently.
@@ -113,7 +113,13 @@ Save to `./distilled-{YYYY-MM-DD}-{entity_id}.md`.
 
 ## Error Handling
 
-- If curl fails or returns empty: "Data unavailable. Try again later or visit distilled.makinote.cn"
+- If curl returns empty or HTTP error:
+  ```
+  Data unavailable. Possible causes:
+  - Network: check if you can reach feed.makinote.cn (curl -s https://feed.makinote.cn/distilled-latest.md | head -1)
+  - CDN cache: data updates at 09:25 and 20:25 Beijing time, may take 5 min to propagate
+  - Pipeline issue: visit distilled.makinote.cn to check if the website is working
+  ```
 - If entity not found: "Entity '{name}' not found. Available: {list of entity displays}"
 - If distilled-latest.md is empty or missing: fall back to fetching watchlist.json and rendering manually (legacy mode)
 
@@ -173,9 +179,8 @@ Upstream: VPS pipeline at `/opt/feed-pipeline/` → pre-rendered + JSON publishe
 
 ## Gotchas
 
-| 日期 | 问题 | 根因 | 修复 |
-|------|------|------|------|
-| 2026-04-02 | PM pipeline 清空 pinned_sources，信源 tab 数据全丢 | refactor 把 `outputs.py` 拆成 `outputs/sources_tab.py`（多了一层目录），但 `config_dir` 的 `dirname` 层数没跟着加 1，导致读不到 `config/watchlist.json` | `dirname` 改为 3 层。**教训：拆模块移文件时必须 grep 所有 `__file__` 相对路径计算，逐个验证** |
-| 2026-04-02 | 改前端 CSS/JS 后 pipeline 跑了一次，数据被覆盖但没感知 | `run.sh` 用 `git add api/ indexes/ lists/` 提交数据文件，如果 pipeline 输出了有 bug 的 JSON 会静默覆盖好数据 | 恢复数据后修复 pipeline。**教训：改前端前先检查 pipeline 是否即将跑，改完后验证数据完整性（pinned_sources count > 0）** |
-| 2026-04-03 | boards.json 和 watchlist.json 没更新，网站日期停在昨天 | 同一次 refactor（f7dcb94）还断了 `data_loader.py` 的 `_date_range` 引用和 `watchlist_builder.py` 的 `import json`。publish.py 标记为 non-fatal 所以 pipeline 成功但数据缺失 | 补全 import。**教训：refactor 拆模块后必须跑完整 pipeline 验证，不能只看 exit code；non-fatal error 也要检查输出文件是否完整** |
-| 2026-04-03 | 用户跑 skill 耗时 7.5 分钟 + 16 万 token | 用户 LLM 解析 870KB JSON 并渲染，每次都重复做相同工作 | VPS 预渲染 distilled-latest.md，skill 只做 curl + display。**教训：渲染逻辑放生产端不放消费端** |
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| Slow (minutes) or high token usage | You're on v3.x which parses 870KB JSON. Update to v4.0+ | `cd ~/.claude/skills/makino-distilled && git pull` |
+| Empty output | CDN cache (5-min TTL) or pipeline hasn't run yet | Wait 5 min, or check distilled.makinote.cn |
+| Entity not found | entity_id is case-sensitive in JSON | Try lowercase: `/makino-distilled claude` not `Claude` |

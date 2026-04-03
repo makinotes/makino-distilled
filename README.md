@@ -4,18 +4,12 @@
 
 ## Install
 
-### Claude Code
-
 ```bash
-cd ~/.claude-internal/skills/
+cd ~/.claude/skills/
 git clone https://github.com/makinotes/makino-distilled.git
 ```
 
 Then type `/makino-distilled` in Claude Code.
-
-### OpenClaw
-
-Copy the `makino-distilled` folder into your agent's skills directory, then invoke `/makino-distilled`.
 
 ## Usage
 
@@ -34,6 +28,48 @@ Full digest — all tracked entities at a glance (24 AI entities, per-section to
 Single entity deep dive — full narrative + all articles.
 
 Output auto-saves to `./distilled-{date}.md`.
+
+## Example Output
+
+```
+DISTILLED · 04-03
+Don't scroll. Distill.
+Proactively manage AI info · Keep up with developments · Reduce anxiety
+
+898 articles · 24 entities · data from 04-02 11:15
+
+━━━ WATCHING ━━━
+
+◆ Agent  [Concept]  31 articles
+  Claude Code 源码泄露让我们看到了其核心的 Agentic Harness 设计...
+
+  ── Agentic Harness (6) ──
+  [75] 一个案例，搞明白 Harness
+       https://mp.weixin.qq.com/s/...  (03-25)
+  [65] 最近很火的 Harness-Engineering 到底是什么？
+       https://mp.weixin.qq.com/s/...  (03-31)
+
+  ...24 entities, ~700 lines total
+```
+
+## Configuration (Coming in v4.1)
+
+The skill pipeline can be configured to adjust source weighting, scoring criteria, and entity tracking. Configuration is managed at the backend (`feed.makinote.cn`), but you can customize your local reading experience:
+
+**Local Customization** (in development):
+- Create `~/.makino-distilled/preferences.json` to customize scoring weights per entity
+- Support for `--filter quality:>8` to show only high-confidence articles
+- Support for `--weight-source <name> <+/- adjustment>` to adjust source credibility
+
+**Roadmap** (v4.1, May 2026):
+- Adaptive caching based on your query frequency (hot entities cache 15min, cold entities cache 6h)
+- User preference learning — the skill learns which sources you engage with and auto-adjusts recommendations
+- Custom source weights — boost trusted sources, deprioritize noisy ones
+- Rule customization — define your own scoring dimensions (not just relevance)
+
+For now, all users see the same curated ranking. If you'd like different behavior, open an issue on GitHub and let us know what dimension matters to you.
+
+**For detailed customization examples**, see [`EXTENSION_GUIDE.md`](../EXTENSION_GUIDE.md) — configure source weights, caching strategies, and extraction rules without modifying the skill code.
 
 ## Features
 
@@ -91,10 +127,14 @@ curl -s https://feed.makinote.cn/lists/watchlist.json | jq '.curated_ids'
 ## Update
 
 ```bash
-cd ~/.claude-internal/skills/makino-distilled && git pull
+cd ~/.claude/skills/makino-distilled && git pull
 ```
 
 The skill also checks for updates automatically on each run. If a new version is available, you'll see a notice in the output.
+
+## Design System
+
+This skill follows the unified **Makino Design System** — see [`_claude/skills/MAKINO_DESIGN_SYSTEM.md`](../MAKINO_DESIGN_SYSTEM.md) for color palette, typography, spacing, and component specifications. All three makino skills share this single source of truth for visual consistency.
 
 ## FAQ
 
@@ -126,7 +166,7 @@ Yes. Use `/makino-distilled claude` or `/makino-distilled agent` to deep dive in
 The skill saves one file per day (`distilled-YYYY-MM-DD.md`) in your working directory. Delete old ones whenever you want — they are just local snapshots.
 
 **Q: How do I update the skill?**
-Run `cd ~/.claude-internal/skills/makino-distilled && git pull`. The skill also auto-checks for updates on each run and shows a notice if a new version is available.
+Run `cd ~/.claude/skills/makino-distilled && git pull`. The skill also auto-checks for updates on each run and shows a notice if a new version is available.
 
 **Q: Will `git pull` overwrite my changes?**
 If you edited SKILL.md locally, git pull may conflict. Recommendation: don't modify SKILL.md — open an issue on GitHub instead.
