@@ -187,7 +187,7 @@ Links are scraped from original sources. Some may expire or get paywalled over t
 
 ## License
 
-MIT
+Apache 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE)
 
 ## Author
 
