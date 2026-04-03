@@ -175,7 +175,7 @@ watchlist.json
                 └── link      (string, URL)
 ```
 
-Upstream: VPS pipeline at `/opt/feed-pipeline/` → pre-rendered + JSON published to `feed.makinote.cn` via Vercel CDN.
+Upstream: VPS pipeline → pre-rendered + JSON published to `feed.makinote.cn` via Vercel CDN.
 
 ## Gotchas
 

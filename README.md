@@ -69,7 +69,6 @@ The skill pipeline can be configured to adjust source weighting, scoring criteri
 
 For now, all users see the same curated ranking. If you'd like different behavior, open an issue on GitHub and let us know what dimension matters to you.
 
-**For detailed customization examples**, see [`EXTENSION_GUIDE.md`](../EXTENSION_GUIDE.md) — configure source weights, caching strategies, and extraction rules without modifying the skill code.
 
 ## Features
 
@@ -132,10 +131,6 @@ cd ~/.claude/skills/makino-distilled && git pull
 
 The skill also checks for updates automatically on each run. If a new version is available, you'll see a notice in the output.
 
-## Design System
-
-This skill follows the unified **Makino Design System** — see [`_claude/skills/MAKINO_DESIGN_SYSTEM.md`](../MAKINO_DESIGN_SYSTEM.md) for color palette, typography, spacing, and component specifications. All three makino skills share this single source of truth for visual consistency.
-
 ## FAQ
 
 **Q: `/makino-distilled` no response or error?**
@@ -172,7 +167,7 @@ Run `cd ~/.claude/skills/makino-distilled && git pull`. The skill also auto-chec
 If you edited SKILL.md locally, git pull may conflict. Recommendation: don't modify SKILL.md — open an issue on GitHub instead.
 
 **Q: Is this the same as the website?**
-Same data source, same JSON. The website has visual design and interactive features. The skill is a terminal-native reader optimized for Claude Code / OpenClaw workflows.
+Same data source, same JSON. The website has visual design and interactive features. The skill is a terminal-native reader optimized for agentic workflows.
 
 **Q: Will this project be maintained?**
 Yes. The pipeline runs automatically. The skill tracks the upstream API schema. Breaking changes follow a deprecation policy (see `api-schema.md` in the pipeline repo).
