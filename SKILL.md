@@ -2,8 +2,8 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "4.1"
-last_updated: "2026-04-03"
+version: "4.2"
+last_updated: "2026-04-06"
 ---
 
 # Distilled — Don't scroll. Distill.
@@ -50,11 +50,11 @@ This file is pre-rendered by the VPS pipeline. It contains the complete terminal
 curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6
 ```
 
-Extract the `version:` line from remote, compare with local version `4.1`.
+Extract the `version:` line from remote, compare with local version `4.2`.
 If remote version > local version, prepend this notice before the output:
 
 ```
-[UPDATE] Distilled v{remote} available (you have v4.1). Run: cd ~/.claude/skills/makino-distilled && git pull
+[UPDATE] Distilled v{remote} available (you have v4.2). Run: cd ~/.claude/skills/makino-distilled && git pull
 ```
 
 If versions match or curl fails: show nothing, skip silently.
