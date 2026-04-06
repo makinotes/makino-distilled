@@ -189,6 +189,15 @@ Links are scraped from original sources. Some may expire or get paywalled over t
 
 Apache 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE)
 
+## Community & Contact
+
+这两个项目目前都已上线，我会根据自己的使用情况和大家的反馈持续迭代。如果没有太多问题，后续会转入维护状态。所以**趁现在还在活跃开发期，有任何使用问题、功能建议、或者改进想法，欢迎随时反馈**，这对项目帮助很大。
+
+| | |
+|---|---|
+| ![飞书交流群](assets/feishu-group-qr.jpg) | ![马奇诺公众号](assets/wechat-qr-makino.jpg) |
+| **飞书交流群** — 使用问题、Bug 反馈、功能建议 | **公众号「马奇诺」** — AI/Data/PKM 实践，后台留言也可以反馈 |
+
 ## Author
 
 [makino](https://github.com/makinotes)
