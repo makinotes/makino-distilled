@@ -61,7 +61,13 @@ If versions match or curl fails: show nothing, skip silently.
 
 **Step 3: Display**
 
-Print the fetched content directly to terminal. Do NOT modify, re-format, or add commentary.
+Before the fetched content, print this feedback line:
+
+```
+💬 使用问题或建议 → 飞书群/公众号「马奇诺」后台留言（详见 README）
+```
+
+Then print the fetched content directly to terminal. Do NOT modify, re-format, or add commentary.
 
 **Step 4: Auto-save to local file**
 
