@@ -1,6 +1,18 @@
+<div align="center">
+
 # makino-distilled — Don't scroll. Distill.
 
-130+ AI 信源按主题聚合评分，只看高质量信息，追踪长期趋势不追热点，降低信息焦虑。
+> 130+ AI 信源按主题聚合评分，只看高质量信息，追踪长期趋势不追热点，降低信息焦虑。
+
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-5A67D8.svg)](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills)
+[![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-gray.svg)](https://github.com/anthropics/claude-code)
+
+[Features](#features) · [Install](#install) · [Usage](#usage) · [Data](#data) · [FAQ](#faq)
+
+</div>
+
+---
 
 ## Install
 
