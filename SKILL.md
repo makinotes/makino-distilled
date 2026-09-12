@@ -2,8 +2,8 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "4.2"
-last_updated: "2026-04-06"
+version: "4.3"
+last_updated: "2026-09-13"
 ---
 
 # Distilled — Don't scroll. Distill.
@@ -16,7 +16,7 @@ Core value: help users proactively manage AI information, keep up with developme
 
 Data updates twice daily (09:25 + 20:25 Beijing time) via VPS crontab.
 All times in this skill are Beijing time (UTC+8).
-Base URL: `https://feed.makinote.cn`
+Base URL: `https://ai.makinote.cn`
 
 **Data freshness**: Pipeline runs at 09:25 and 20:25 Beijing time.
 If you run before 09:25, you get yesterday's evening data.
@@ -39,7 +39,7 @@ When fetching data, always append `?c=skill` to the URL for analytics.
 **Step 1: Fetch pre-rendered digest**
 
 ```bash
-curl -s "https://feed.makinote.cn/distilled-latest.md?c=skill"
+curl -s "https://ai.makinote.cn/distilled-latest.md?c=skill"
 ```
 
 This file is pre-rendered by the VPS pipeline. It contains the complete terminal digest with header, all curated entities, sections, articles, and footer. No parsing or rendering needed.
@@ -50,11 +50,11 @@ This file is pre-rendered by the VPS pipeline. It contains the complete terminal
 curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6
 ```
 
-Extract the `version:` line from remote, compare with local version `4.2`.
+Extract the `version:` line from remote, compare with local version `4.3`.
 If remote version > local version, prepend this notice before the output:
 
 ```
-[UPDATE] Distilled v{remote} available (you have v4.2). Run: cd ~/.claude/skills/makino-distilled && git pull
+[UPDATE] Distilled v{remote} available (you have v4.3). Run: cd ~/.claude/skills/makino-distilled && git pull
 ```
 
 If versions match or curl fails: show nothing, skip silently.
@@ -86,7 +86,7 @@ Entity detail is NOT pre-rendered — it requires filtering a single entity from
 **Step 1: Fetch watchlist.json**
 
 ```bash
-curl -s "https://feed.makinote.cn/lists/watchlist.json?c=skill"
+curl -s "https://ai.makinote.cn/lists/watchlist.json?c=skill"
 ```
 
 **Step 2: Find and render entity**
@@ -122,9 +122,9 @@ Save to `./distilled-{YYYY-MM-DD}-{entity_id}.md`.
 - If curl returns empty or HTTP error:
   ```
   Data unavailable. Possible causes:
-  - Network: check if you can reach feed.makinote.cn (curl -s https://feed.makinote.cn/distilled-latest.md | head -1)
+  - Network: check if you can reach ai.makinote.cn (curl -s https://ai.makinote.cn/distilled-latest.md | head -1)
   - CDN cache: data updates at 09:25 and 20:25 Beijing time, may take 5 min to propagate
-  - Pipeline issue: visit distilled.makinote.cn to check if the website is working
+  - Pipeline issue: visit ai.makinote.cn to check if the website is working
   ```
 - If entity not found: "Entity '{name}' not found. Available: {list of entity displays}"
 - If distilled-latest.md is empty or missing: fall back to fetching watchlist.json and rendering manually (legacy mode)
@@ -181,12 +181,12 @@ watchlist.json
                 └── link      (string, URL)
 ```
 
-Upstream: VPS pipeline → pre-rendered + JSON published to `feed.makinote.cn` via Vercel CDN.
+Upstream: VPS pipeline → pre-rendered + JSON published to `ai.makinote.cn` via Vercel CDN.
 
 ## Gotchas
 
 | Problem | Cause | Fix |
 |---------|-------|-----|
 | Slow (minutes) or high token usage | You're on v3.x which parses 870KB JSON. Update to v4.0+ | `cd ~/.claude/skills/makino-distilled && git pull` |
-| Empty output | CDN cache (5-min TTL) or pipeline hasn't run yet | Wait 5 min, or check distilled.makinote.cn |
+| Empty output | CDN cache (5-min TTL) or pipeline hasn't run yet | Wait 5 min, or check ai.makinote.cn |
 | Entity not found | entity_id is case-sensitive in JSON | Try lowercase: `/makino-distilled claude` not `Claude` |
