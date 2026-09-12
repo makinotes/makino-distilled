@@ -750,4 +750,4 @@ Proactively manage AI info · Keep up with developments · Reduce anxiety
 ────────────────────────────────────────────────────────────────────
 
 --------------------------------------------------------------------
-distilled.makinote.cn · manage AI info proactively · by makino
+ai.makinote.cn · manage AI info proactively · by makino

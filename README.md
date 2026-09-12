@@ -76,7 +76,7 @@ Proactively manage AI info · Keep up with developments · Reduce anxiety
 
 ## Configuration (Coming in v4.1)
 
-The skill pipeline can be configured to adjust source weighting, scoring criteria, and entity tracking. Configuration is managed at the backend (`feed.makinote.cn`), but you can customize your local reading experience:
+The skill pipeline can be configured to adjust source weighting, scoring criteria, and entity tracking. Configuration is managed at the backend (`ai.makinote.cn`), but you can customize your local reading experience:
 
 **Local Customization** (in development):
 - Create `~/.makino-distilled/preferences.json` to customize scoring weights per entity
@@ -98,7 +98,7 @@ For now, all users see the same curated ranking. If you'd like different behavio
 - Auto-updates twice daily (09:25 / 20:25 Beijing time)
 - Auto-detect data freshness (stale data warning)
 - Auto-check for skill updates on each run
-- Same data as [distilled.makinote.cn](https://distilled.makinote.cn), terminal-native
+- Same data as [ai.makinote.cn](https://ai.makinote.cn), terminal-native
 
 ## What Problem Does This Solve
 
@@ -106,7 +106,7 @@ Keeping up with AI developments means scrolling through dozens of sources daily.
 
 ## Data
 
-All data is fetched from public JSON endpoints at `feed.makinote.cn`.
+All data is fetched from public JSON endpoints at `ai.makinote.cn`.
 
 Pipeline runs twice daily on VPS via crontab (Beijing time):
 - **09:25** — morning update
@@ -134,16 +134,16 @@ The JSON endpoints are public. Build your own client:
 
 ```bash
 # Entity narrative
-curl -s https://feed.makinote.cn/lists/watchlist.json | \
+curl -s https://ai.makinote.cn/lists/watchlist.json | \
   jq '.entities[] | select(.entity_id == "claude") | .narrative.summary'
 
 # All curated entity IDs
-curl -s https://feed.makinote.cn/lists/watchlist.json | jq '.curated_ids'
+curl -s https://ai.makinote.cn/lists/watchlist.json | jq '.curated_ids'
 ```
 
 ## Website
 
-[distilled.makinote.cn](https://distilled.makinote.cn) — same data, visual interface.
+[ai.makinote.cn](https://ai.makinote.cn) — same data, visual interface.
 
 ## Update
 
@@ -156,10 +156,10 @@ The skill also checks for updates automatically on each run. If a new version is
 ## FAQ
 
 **Q: `/makino-distilled` no response or error?**
-Make sure you cloned into the correct directory (`~/.claude-internal/skills/makino-distilled`). The folder name must be exactly `makino-distilled`. If you see curl errors, check if your network can reach `feed.makinote.cn`.
+Make sure you cloned into the correct directory (`~/.claude-internal/skills/makino-distilled`). The folder name must be exactly `makino-distilled`. If you see curl errors, check if your network can reach `ai.makinote.cn`.
 
 **Q: What are the 130+ sources?**
-Chinese and English AI media, tech blogs, research labs, newsletters, and developer communities. The full source list is curated and maintained on the backend. You can browse entity coverage at [distilled.makinote.cn](https://distilled.makinote.cn).
+Chinese and English AI media, tech blogs, research labs, newsletters, and developer communities. The full source list is curated and maintained on the backend. You can browse entity coverage at [ai.makinote.cn](https://ai.makinote.cn).
 
 **Q: Who picks the tracked entities? Can I add my own?**
 The 24 entities (Claude, Agent, OpenAI, etc.) are curated by the pipeline maintainer. Custom entity tracking is not supported yet — this is a read-only client.
