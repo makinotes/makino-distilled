@@ -5,7 +5,7 @@
 > 130+ AI 信源按主题聚合评分，只看高质量信息，追踪长期趋势不追热点，降低信息焦虑。
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-5A67D8.svg)](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-5A67D8.svg)](https://docs.claude.com/en/docs/claude-code/skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-gray.svg)](https://github.com/anthropics/claude-code)
 
 [Features](#features) · [Install](#install) · [Usage](#usage) · [Data](#data) · [FAQ](#faq)
@@ -29,7 +29,7 @@ Then type `/makino-distilled` in Claude Code.
 /makino-distilled
 ```
 
-Full digest — all tracked entities at a glance (24 AI entities, per-section top 3 articles).
+Full digest — every curated entity at a glance (per-section top 3 articles).
 
 ```
 /makino-distilled claude
@@ -74,28 +74,14 @@ Proactively manage AI info · Keep up with developments · Reduce anxiety
   ...24 entities, ~750 lines total
 ```
 
-## Configuration (Coming in v4.1)
+## Configuration
 
-The skill pipeline can be configured to adjust source weighting, scoring criteria, and entity tracking. Configuration is managed at the backend (`ai.makinote.cn`), but you can customize your local reading experience:
-
-**Local Customization** (in development):
-- Create `~/.makino-distilled/preferences.json` to customize scoring weights per entity
-- Support for `--filter quality:>8` to show only high-confidence articles
-- Support for `--weight-source <name> <+/- adjustment>` to adjust source credibility
-
-**Roadmap** (v4.1, May 2026):
-- Adaptive caching based on your query frequency (hot entities cache 15min, cold entities cache 6h)
-- User preference learning — the skill learns which sources you engage with and auto-adjusts recommendations
-- Custom source weights — boost trusted sources, deprioritize noisy ones
-- Rule customization — define your own scoring dimensions (not just relevance)
-
-For now, all users see the same curated ranking. If you'd like different behavior, open an issue on GitHub and let us know what dimension matters to you.
-
+There is nothing to configure. Every user sees the same curated ranking; scoring and entity tracking live in the backend. If a dimension matters to you, open an issue and say which one.
 
 ## Features
 
 - Zero dependencies, zero API keys (just curl)
-- Auto-updates twice daily (09:25 / 20:25 Beijing time)
+- Data refreshes once a day, around 06:45 Beijing time (22:45 UTC)
 - Auto-detect data freshness (stale data warning)
 - Auto-check for skill updates on each run
 - Same data as [ai.makinote.cn](https://ai.makinote.cn), terminal-native
@@ -108,11 +94,9 @@ Keeping up with AI developments means scrolling through dozens of sources daily.
 
 All data is fetched from public JSON endpoints at `ai.makinote.cn`.
 
-Pipeline runs twice daily on VPS via crontab (Beijing time):
-- **09:25** — morning update
-- **20:25** — evening update
+The pipeline runs once a day on a VPS via crontab, at about 06:45 Beijing time (22:45 UTC).
 
-If you run before 09:25, you get yesterday's evening data. The skill shows a freshness note when data is stale.
+If you run before the daily update, you get the previous day's data. The skill shows a freshness note when data is stale.
 
 | Endpoint | Content |
 |----------|---------|
@@ -124,7 +108,7 @@ If you run before 09:25, you get yesterday's evening data. The skill shows a fre
 130+ sources --> Pipeline (VPS) --> JSON API (CDN) --> This skill (curl + render)
 ```
 
-The pipeline fetches, scores, summarizes, and structures articles twice daily.
+The pipeline fetches, scores, summarizes, and structures articles once a day.
 This skill is a read-only terminal client — it fetches the JSON and formats it.
 No local processing, no LLM calls, no state.
 
@@ -156,13 +140,13 @@ The skill also checks for updates automatically on each run. If a new version is
 ## FAQ
 
 **Q: `/makino-distilled` no response or error?**
-Make sure you cloned into the correct directory (`~/.claude-internal/skills/makino-distilled`). The folder name must be exactly `makino-distilled`. If you see curl errors, check if your network can reach `ai.makinote.cn`.
+Make sure you cloned into the correct directory (`~/.claude/skills/makino-distilled`). The folder name must be exactly `makino-distilled`. If you see curl errors, check if your network can reach `ai.makinote.cn`.
 
 **Q: What are the 130+ sources?**
 Chinese and English AI media, tech blogs, research labs, newsletters, and developer communities. The full source list is curated and maintained on the backend. You can browse entity coverage at [ai.makinote.cn](https://ai.makinote.cn).
 
 **Q: Who picks the tracked entities? Can I add my own?**
-The 24 entities (Claude, Agent, OpenAI, etc.) are curated by the pipeline maintainer. Custom entity tracking is not supported yet — this is a read-only client.
+The curated entities (Claude, Agent, OpenAI, etc.) are picked by the pipeline maintainer. Custom entity tracking is not supported yet — this is a read-only client.
 
 **Q: What does the score (e.g. [83]) mean?**
 A relevance score from 0-100 assigned by the pipeline. Higher = more relevant to the entity topic. It is NOT a quality rating of the article itself.
@@ -171,10 +155,7 @@ A relevance score from 0-100 assigned by the pipeline. Higher = more relevant to
 The pipeline tracks articles from the past 30 days. Older articles roll off automatically. This keeps the digest focused on recent developments.
 
 **Q: I see `[NOTE] Data is from yesterday` — is something broken?**
-No. The pipeline updates at 09:25 and 20:25 Beijing time. If you run before the morning update, you get last night's data. This is normal.
-
-**Q: Morning run vs evening run — what's different?**
-Morning data includes overnight articles. Evening data adds the day's articles. Entity narratives are regenerated each run, so summaries may shift.
+No. The pipeline updates once a day at about 06:45 Beijing time. If you run before that, you get the previous day's data. This is normal.
 
 **Q: Output is very long. Can I see just one entity?**
 Yes. Use `/makino-distilled claude` or `/makino-distilled agent` to deep dive into a single entity with full article lists.
@@ -192,7 +173,7 @@ If you edited SKILL.md locally, git pull may conflict. Recommendation: don't mod
 Same data source, same JSON. The website has visual design and interactive features. The skill is a terminal-native reader optimized for agentic workflows.
 
 **Q: Will this project be maintained?**
-Yes. The pipeline runs automatically. The skill tracks the upstream API schema. Breaking changes follow a deprecation policy (see `api-schema.md` in the pipeline repo).
+Yes. The pipeline runs automatically, and this skill is updated whenever the upstream JSON changes.
 
 **Q: Are article links guaranteed to work?**
 Links are scraped from original sources. Some may expire or get paywalled over time. The pipeline does not archive article content.
@@ -203,12 +184,9 @@ Apache 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE)
 
 ## Community & Contact
 
-这两个项目目前都已上线，我会根据自己的使用情况和大家的反馈持续迭代。如果没有太多问题，后续会转入维护状态。所以**趁现在还在活跃开发期，有任何使用问题、功能建议、或者改进想法，欢迎随时反馈**，这对项目帮助很大。
+Bugs, questions and ideas: open an issue. 也可以在公众号「马奇诺」后台留言。
 
-| | |
-|---|---|
-| ![飞书交流群](assets/feishu-group-qr.jpg) | ![马奇诺公众号](assets/wechat-qr-makino.jpg) |
-| **飞书交流群** — 使用问题、Bug 反馈、功能建议 | **公众号「马奇诺」** — AI/Data/PKM 实践，后台留言也可以反馈 |
+<img src="assets/wechat-qr-makino.jpg" alt="公众号 马奇诺" width="200">
 
 ## Author
 

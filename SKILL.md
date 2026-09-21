@@ -2,8 +2,8 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "4.3"
-last_updated: "2026-09-13"
+version: "4.3.1"
+last_updated: "2026-09-21"
 ---
 
 # Distilled — Don't scroll. Distill.
@@ -14,14 +14,12 @@ The VPS pipeline pre-renders the terminal digest. Your job is to fetch and prese
 
 Core value: help users proactively manage AI information, keep up with developments, and reduce information anxiety.
 
-Data updates twice daily (09:25 + 20:25 Beijing time) via VPS crontab.
+Data updates once a day (about 06:45 Beijing time, 22:45 UTC) via VPS crontab.
 All times in this skill are Beijing time (UTC+8).
 Base URL: `https://ai.makinote.cn`
 
-**Data freshness**: Pipeline runs at 09:25 and 20:25 Beijing time.
-If you run before 09:25, you get yesterday's evening data.
-If you run between 09:25-20:25, you get today's morning data.
-If you run after 20:25, you get today's evening data.
+**Data freshness**: Pipeline runs once a day at about 06:45 Beijing time.
+If you run before 06:45, you get the previous day's data.
 
 When fetching data, always append `?c=skill` to the URL for analytics.
 
@@ -123,7 +121,7 @@ Save to `./distilled-{YYYY-MM-DD}-{entity_id}.md`.
   ```
   Data unavailable. Possible causes:
   - Network: check if you can reach ai.makinote.cn (curl -s https://ai.makinote.cn/distilled-latest.md | head -1)
-  - CDN cache: data updates at 09:25 and 20:25 Beijing time, may take 5 min to propagate
+  - CDN cache: data updates at about 06:45 Beijing time, may take 5 min to propagate
   - Pipeline issue: visit ai.makinote.cn to check if the website is working
   ```
 - If entity not found: "Entity '{name}' not found. Available: {list of entity displays}"
@@ -140,7 +138,7 @@ Save to `./distilled-{YYYY-MM-DD}-{entity_id}.md`.
 ## Architecture
 
 ```
-VPS pipeline (09:25 + 20:25)
+VPS pipeline (daily 06:45)
   → watchlist.json (870KB, entity narratives + articles)
   → distilled-latest.md (40KB, pre-rendered terminal digest)  ← NEW
   → Vercel CDN (5-min cache)
