@@ -2,8 +2,8 @@
 name: makino-distilled
 invocation: user
 description: "Distilled — Daily AI digest in your terminal. 130+ sources scored and structured into JSON. No API keys, no dependencies — just curl."
-version: "4.3.1"
-last_updated: "2026-09-21"
+version: "4.3.2"
+last_updated: "2026-09-25"
 ---
 
 # Distilled — Don't scroll. Distill.
@@ -48,11 +48,11 @@ This file is pre-rendered by the VPS pipeline. It contains the complete terminal
 curl -s https://raw.githubusercontent.com/makinotes/makino-distilled/main/SKILL.md | head -6
 ```
 
-Extract the `version:` line from remote, compare with local version `4.3`.
+Extract the `version:` line from remote, compare with the `version:` in this file's frontmatter.
 If remote version > local version, prepend this notice before the output:
 
 ```
-[UPDATE] Distilled v{remote} available (you have v4.3). Run: cd ~/.claude/skills/makino-distilled && git pull
+[UPDATE] Distilled v{remote} available (you have v{local}). Run: cd ~/.claude/skills/makino-distilled && git pull
 ```
 
 If versions match or curl fails: show nothing, skip silently.
@@ -185,6 +185,5 @@ Upstream: VPS pipeline → pre-rendered + JSON published to `ai.makinote.cn` via
 
 | Problem | Cause | Fix |
 |---------|-------|-----|
-| Slow (minutes) or high token usage | You're on v3.x which parses 870KB JSON. Update to v4.0+ | `cd ~/.claude/skills/makino-distilled && git pull` |
 | Empty output | CDN cache (5-min TTL) or pipeline hasn't run yet | Wait 5 min, or check ai.makinote.cn |
 | Entity not found | entity_id is case-sensitive in JSON | Try lowercase: `/makino-distilled claude` not `Claude` |
