@@ -139,8 +139,8 @@ Save to `./distilled-{YYYY-MM-DD}-{entity_id}.md`.
 
 ```
 VPS pipeline (daily 06:45)
-  → watchlist.json (870KB, entity narratives + articles)
-  → distilled-latest.md (40KB, pre-rendered terminal digest)  ← NEW
+  → watchlist.json (~800KB, entity narratives + articles)
+  → distilled-latest.md (~70KB, pre-rendered terminal digest)  ← NEW
   → Vercel CDN (5-min cache)
 
 /makino-distilled (full)     → curl distilled-latest.md → display    (~2s, ~500 tokens)
@@ -151,8 +151,8 @@ VPS pipeline (daily 06:45)
 
 | Endpoint | Used by | Size |
 |----------|---------|------|
-| `distilled-latest.md?c=skill` | Full digest | ~40KB |
-| `lists/watchlist.json?c=skill` | Entity detail only | ~870KB |
+| `distilled-latest.md?c=skill` | Full digest | ~70KB |
+| `lists/watchlist.json?c=skill` | Entity detail only | ~800KB |
 
 ### watchlist.json fields (entity detail only)
 
