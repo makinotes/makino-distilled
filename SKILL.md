@@ -144,7 +144,7 @@ VPS pipeline (daily 06:45)
   → Vercel CDN (5-min cache)
 
 /makino-distilled (full)     → curl distilled-latest.md → display    (~2s)
-/makino-distilled <entity>   → curl watchlist.json → filter → render  (~30s, ~20K tokens)
+/makino-distilled <entity>   → curl watchlist.json → filter → render  (~30s)
 ```
 
 ## Consumed Endpoints
