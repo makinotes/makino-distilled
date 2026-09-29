@@ -1,8 +1,8 @@
 <div align="center">
 
-# makino-distilled — Don't scroll. Distill.
+# makino-distilled — 把握 AI 主线
 
-> 130+ AI 信源按主题聚合评分，只看高质量信息，追踪长期趋势不追热点，降低信息焦虑。
+> 每天读少一点，理解多一点。AI 信源按主题聚合评分，只看高质量信息，追踪长期趋势不追热点。
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-5A67D8.svg)](https://docs.claude.com/en/docs/claude-code/skills)
@@ -88,7 +88,7 @@ There is nothing to configure. Every user sees the same curated ranking; scoring
 
 ## What Problem Does This Solve
 
-Keeping up with AI developments means scrolling through dozens of sources daily. Most of it is noise. This skill distills 130+ sources into structured, scored summaries — you read the terminal output in 2 minutes instead of scrolling feeds for an hour. Know what matters, skip what doesn't.
+Keeping up with AI developments means scrolling through dozens of sources daily. Most of it is noise. This skill distills a curated set of AI sources into structured, scored summaries — you read the terminal output in 2 minutes instead of scrolling feeds for an hour. Know what matters, skip what doesn't.
 
 ## Data
 
@@ -105,7 +105,7 @@ If you run before the daily update, you get the previous day's data. The skill s
 ## How It Works
 
 ```
-130+ sources --> Pipeline (VPS) --> JSON API (CDN) --> This skill (curl + render)
+AI sources --> Pipeline (VPS) --> JSON API (CDN) --> This skill (curl + render)
 ```
 
 The pipeline fetches, scores, summarizes, and structures articles once a day.
@@ -142,7 +142,7 @@ The skill also checks for updates automatically on each run. If a new version is
 **Q: `/makino-distilled` no response or error?**
 Make sure you cloned into the correct directory (`~/.claude/skills/makino-distilled`). The folder name must be exactly `makino-distilled`. If you see curl errors, check if your network can reach `ai.makinote.cn`.
 
-**Q: What are the 130+ sources?**
+**Q: What sources does it use?**
 Chinese and English AI media, tech blogs, research labs, newsletters, and developer communities. The full source list is curated and maintained on the backend. You can browse entity coverage at [ai.makinote.cn](https://ai.makinote.cn).
 
 **Q: Who picks the tracked entities? Can I add my own?**
